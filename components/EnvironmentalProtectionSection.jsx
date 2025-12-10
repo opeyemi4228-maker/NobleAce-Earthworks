@@ -7,21 +7,21 @@ import Image from "next/image";
 const cards = [
   {
     title: "Mining Exploration",
-    desc: "NobleAce Earthworks provides comprehensive geological surveys and exploration services to identify and evaluate mineral resources with precision and efficiency.",
-    image: assets.mine5,
+    desc: "NobleAce Earthworks provides comprehensive geological surveys and exploration services to identify mineral resources with precision and efficiency.",
+    image: assets.pic21,
     link: "#exploration",
     cta: "Discover More",
   },
   {
     title: "Licensing & Regulatory Compliance",
-    desc: "We assist clients in obtaining mining licenses and ensuring compliance with local and international regulations, simplifying the licensing process for sustainable operations.",
+    desc: "We assist clients in obtaining mining licenses and ensuring compliance with local regulations, simplifying the licensing process for sustainable operations.",
     image: assets.mine4,
     link: "#licensing",
     cta: "Learn How",
   },
   {
-    title: "Mining Consultancy & Project Management",
-    desc: "Our expert geologists and engineers provide consultancy on mining operations, feasibility studies, and project management to optimize productivity and minimize environmental impact.",
+    title: "Mining Consultancy",
+    desc: "Our expert geologists and engineers provide consultancy on mining operations, feasibility studies, and project management to optimize productivity.",
     image: assets.mine3,
     link: "#consultancy",
     cta: "Get Consulting",
@@ -154,11 +154,11 @@ function ParallaxCard({ card, index, activeIndex, setActiveIndex }) {
         />
       </div>
 
-      <div className="card-content flex flex-col justify-between px-6 py-6 relative h-[44%]">
-        <h3 className="card-title text-[18px] font-semibold leading-snug text-[#1A1A1A] mb-2">
+      <div className="card-content flex flex-col justify-between px-6 py-4 relative h-[44%]">
+        <h3 className="card-title text-[16px] font-bold leading-snug text-[#1A1A1A] mb-1">
           {card.title}
         </h3>
-        <p className="text-gray-700 text-base mb-4">{card.desc}</p>
+        <p className="text-gray-700 text-[12px] mb-4">{card.desc}</p>
         <a
           href={card.link}
           className="card-link flex items-center gap-2 text-sky-700 font-medium text-base mt-auto group cursor-pointer relative"
@@ -256,8 +256,8 @@ export default function MiningServicesSection() {
         <span className="uppercase text-xs tracking-widest font-semibold text-[#666] text-[12px] mb-3 block">
           MINING SERVICES
         </span>
-        <h2 className="text-xl md:text-4xl font-semibold text-gray-800 mb-4">
-          Expert Mining Solutions
+        <h2 className="text-xl md:text-4xl font-bold text-gray-800 mb-4">
+          EXPERT MINING SOLUTION
         </h2>
         <p className="text-lg font-light text-gray-700 mb-8 max-w-2xl">
           NobleAce Earthworks delivers end-to-end mining services, including exploration, licensing, and consultancy, ensuring sustainable and compliant operations for clients worldwide.

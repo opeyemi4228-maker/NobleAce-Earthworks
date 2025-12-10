@@ -1,6 +1,6 @@
 'use client';
 import React, { useRef, useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { assets } from "@/assets/assets";
 import Image from "next/image";
 
@@ -56,9 +56,86 @@ function MiningParticles({ count = 60 }) {
   );
 }
 
+// --- Get A Quote Modal ---
+function GetAQuoteModal({ isOpen, onClose }) {
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* --- Backdrop with Lens Blur --- */}
+          <motion.div
+            key="backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.6 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+            onClick={onClose}
+          />
+
+          {/* --- Modal Sliding Up, Starts below Navbar on large screens --- */}
+          <motion.div
+            key="modal"
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 100 }}
+            transition={{ type: "spring", stiffness: 120, damping: 20 }}
+            className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-24 md:pt-32"
+          >
+            <div className="bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl max-w-lg w-full p-8 relative z-50">
+              {/* --- Bold Close Button --- */}
+              <button
+                onClick={onClose}
+                className="absolute top-4 right-4 text-[#B87333] hover:text-[#003B5C] text-3xl font-extrabold"
+                aria-label="Close Get A Quote Modal"
+              >
+                ×
+              </button>
+              <h2 className="text-2xl font-extrabold text-[#003B5C] mb-4">
+                Get A Quote
+              </h2>
+              <p className="text-gray-600 mb-6">
+                Fill out the form below and our team will get back to you promptly.
+              </p>
+              <form className="flex flex-col gap-4">
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  className="border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-[#B87333]"
+                />
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  className="border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-[#B87333]"
+                />
+                <input
+                  type="text"
+                  placeholder="Company / Project"
+                  className="border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-[#B87333]"
+                />
+                <textarea
+                  placeholder="Message"
+                  rows={4}
+                  className="border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-[#B87333]"
+                />
+                <button
+                  type="submit"
+                  className="bg-[#003B5C] text-white font-bold uppercase py-3 rounded-md hover:bg-[#B87333] transition-all duration-300 shadow-md hover:shadow-xl"
+                >
+                  Submit
+                </button>
+              </form>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
+
 // --- Main Hero Banner ---
 export default function NobleAceHeroBanner() {
   const sectionRef = useRef();
+  const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <section
@@ -77,7 +154,7 @@ export default function NobleAceHeroBanner() {
     >
       {/* --- BG Image Layer --- */}
       <Image
-        src={assets.mine1}
+        src={assets.pic10}
         alt="NobleAce Earthworks mining exploration and consultancy operations"
         fill
         priority
@@ -92,41 +169,42 @@ export default function NobleAceHeroBanner() {
       {/* --- Content Overlay --- */}
       <div
         className="absolute bottom-8 right-8 flex flex-col items-end gap-4 z-20"
-        style={{
-          maxWidth: "90vw",
-        }}
+        style={{ maxWidth: "90vw" }}
       >
         <div className="bg-white/60 px-6 py-4 rounded-lg shadow-lg backdrop-blur-sm">
-          <span className="uppercase text-xs font-semibold tracking-wider text-[#003B5C] mb-2 block">
-            ADVANCING MINING. EMPOWERING INDUSTRY.
+          <span className="uppercase text-xs font-bold tracking-wider text-[#003B5C] mb-2 block">
+            Unlocking the Potential of Earth's Resources.
           </span>
-          <h1 className="text-[#1C1C1C] font-bold text-3xl md:text-5xl leading-tight mb-2 text-left">
-            EXPERT IN MINING
-            <br />
-             EXPLORATION.
+          <h1 className="text-[#1C1C1C] font-extrabold text-3xl md:text-5xl leading-tight mb-2 text-left">
+            MINERAL EXPLORATION & <br /> CONSULTANCY SERVICES
           </h1>
           <div className="flex flex-col md:flex-row gap-3 mt-4">
             <button className="h-12 px-8 rounded-[2px] bg-[#003B5C] text-white font-bold uppercase tracking-wide shadow hover:shadow-lg hover:border-[#B87333] border-2 border-transparent transition-all duration-300">
-              Explore Our Mining Services
+              Explore Our Services
             </button>
-            <button className="h-12 px-8 rounded-[2px] border-2 border-[#B87333] text-[#003B5C] bg-white font-bold uppercase tracking-wide hover:bg-[#B87333] hover:text-white transition-all duration-300">
-              View Our Reports
+            <button
+              onClick={() => setModalOpen(true)}
+              className="h-12 px-8 rounded-[2px] border-2 border-[#B87333] text-[#003B5C] bg-white font-bold uppercase tracking-wide hover:bg-[#B87333] hover:text-white transition-all duration-300"
+            >
+              Get A Quote
             </button>
           </div>
         </div>
       </div>
 
-      {/* --- Info Button --- */}
+      {/* --- Floating Contact Button --- */}
       <button
         className="fixed bottom-8 right-8 z-30 bg-[#003B5C] text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg border-2 border-[#B87333] focus:outline-none"
         aria-label="Contact NobleAce Earthworks"
-        tabIndex={0}
       >
         <svg width="32" height="32" fill="none" stroke="#B87333" strokeWidth="2">
           <circle cx="16" cy="16" r="14" />
           <path d="M16 10v8M16 22h.01" />
         </svg>
       </button>
+
+      {/* --- Get A Quote Modal --- */}
+      <GetAQuoteModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
 
       {/* --- Responsive Styles --- */}
       <style jsx>{`

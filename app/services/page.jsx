@@ -1,130 +1,211 @@
-'use client';
-import React, { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+// app/services/page.jsx
+"use client";
+
+import React from "react";
+import Image from "next/image";
+import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer1 from "@/components/Footer1";
-import FAQSection from "@/components/FAQSection";
+import { assets } from "@/assets/assets";
 
-// --- Font Import ---
-const OutfitFont = () => (
-  <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap');
-    body, .font-outfit {
-      font-family: 'Outfit', sans-serif !important;
-    }
-  `}</style>
-);
-
-// --- Animation Variants ---
-const heroBgVariants = {
-  initial: { opacity: 0, scale: 1.15, filter: "blur(5px)" },
-  animate: { opacity: 1, scale: 1, filter: "blur(0px)", transition: { duration: 2, ease: [0.25, 0.46, 0.45, 0.94] } },
-  kenBurns: { scale: 1.07, transition: { duration: 25, ease: "linear" } },
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
 };
-const heroHeadlineVariants = { hidden: { opacity: 0, clipPath: "inset(0 100% 0 0)" }, visible: { opacity: 1, clipPath: "inset(0 0 0 0)", transition: { duration: 1.2, delay: 0.4, ease: "easeOut" } } };
-const heroSubVariants = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 1, delay: 0.8, ease: "easeOut" } } };
-const introColVariants = { hidden: { opacity: 0, y: 40, filter: "blur(3px)" }, visible: i => ({ opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 1, delay: i * 0.25, ease: "easeOut" } }) };
 
-// --- Data ---
-const focusAreas = [
-  { title: "Mineral Exploration & Targeting", tag: "Exploration", img: "https://images.unsplash.com/photo-1504945005722-7e1b5f0f7f90?auto=format&fit=crop&w=800&q=80" },
-  { title: "Geotechnical Investigations & Pit Stability", tag: "Geotechnical", img: "https://images.unsplash.com/photo-1529257414776-1963f0b6a0d6?auto=format&fit=crop&w=800&q=80" },
-  { title: "Environmental Assessment & Reclamation Planning", tag: "EIA & Rehab", img: "https://images.unsplash.com/photo-1509228627153-9f1b3b7e6a37?auto=format&fit=crop&w=800&q=80" },
-  { title: "Hydrogeology & Water Management", tag: "Hydrogeology", img: "https://images.unsplash.com/photo-1505672678657-cc7037095e2c?auto=format&fit=crop&w=800&q=80" },
-  { title: "GIS, Remote Sensing & Geological Modelling", tag: "GIS & Modelling", img: "https://images.unsplash.com/photo-1526378729438-38b1b9d7b59b?auto=format&fit=crop&w=800&q=80" },
-];
+const slideIn = {
+  hidden: { opacity: 0, x: 60 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.9, ease: "easeOut" } },
+};
 
-// --- Helper Components ---
-function FocusCard({ area, index }) {
-  const cardRef = useRef(null);
-  const inView = useInView(cardRef, { margin: "-100px", once: true });
+const stagger = {
+  show: { transition: { staggerChildren: 0.12 } },
+};
+
+export default function ServicesPage() {
+  const services = [
+    {
+      title: "Mineral Exploration & Targeting",
+      desc: "Integrated exploration programs using geology, geophysics, geochemistry, and remote sensing.",
+      points: ["Reconnaissance", "Target generation", "Exploration program design"],
+      img: assets.pic1,
+    },
+    {
+      title: "Drilling, Sampling & QA/QC",
+      desc: "Robust sampling protocols and chain-of-custody management for drill programs.",
+      points: ["Core & RC drilling", "QA/QC workflows", "Lab coordination"],
+      img: assets.pic21,
+    },
+    {
+      title: "Resource Modeling & Reporting",
+      desc: "JORC/NI 43-101 compliant resource modeling and feasibility studies.",
+      points: ["3D models", "Grade estimation", "Feasibility support"],
+      img: assets.pic23,
+    },
+    {
+      title: "Licensing & Regulatory Support",
+      desc: "Guidance for permits, approvals, and local stakeholder engagement.",
+      points: ["Applications", "Regulatory mapping", "Local compliance"],
+      img: "/images/licensing.jpg",
+    },
+    {
+      title: "ESG & Environmental Consulting",
+      desc: "Environmental & social impact assessments with closure planning.",
+      points: ["ESIA", "Mine closure planning", "Community engagement"],
+      img: "/images/esg.jpg",
+    },
+    {
+      title: "Geotechnical & Hydrogeological Studies",
+      desc: "Slope stability, groundwater modeling, and tailings management.",
+      points: ["Slope stability", "Groundwater modeling", "Water management"],
+      img: assets.pic16,
+    },
+  ];
+
   return (
-    <motion.article
-      ref={cardRef}
-      variants={{ hidden: { opacity: 0, scale: 0.9 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.7, delay: index * 0.15 } } }}
-      initial="hidden"
-      animate={inView ? "visible" : "hidden"}
-      className="group bg-white rounded-xl shadow-md flex-shrink-0 w-[340px] md:w-[400px] mr-8 border border-transparent hover:border-[#00A86B] transition-all duration-300"
-    >
-      <div className="relative aspect-[16/9] w-full overflow-hidden">
-        <img src={area.img} alt={area.title} className="w-full h-full object-cover transition-transform duration-400" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-        <span className="absolute left-4 top-4 bg-[#000ea8] text-white text-xs font-medium px-3 py-1 rounded-full shadow">{area.tag}</span>
-      </div>
-      <div className="p-6 flex flex-col flex-1">
-        <h3 className="text-lg md:text-xl font-light mb-2 group-hover:text-[#000ea8] transition-colors">{area.title}</h3>
-      </div>
-    </motion.article>
-  );
-}
-
-// --- Main Page ---
-export default function WhatWeDoPage() {
-  const heroRef = useRef(null);
-  const heroInView = useInView(heroRef, { margin: "-100px", once: true });
-
-  return (
-    <div className="bg-[#ffffff] min-h-screen font-outfit">
-      <OutfitFont />
+    <>
       <Navbar />
+      <main className="w-full bg-white antialiased flex flex-col items-center">
 
-      {/* Hero Section */}
-      <section className="relative w-full h-[520px] md:h-[680px] flex items-center justify-center overflow-hidden mb-6">
-        <motion.div
-          className="absolute inset-0 w-full h-full"
-          variants={heroBgVariants}
-          initial="initial"
-          animate="animate"
-          whileInView="kenBurns"
-          style={{
-            background: "linear-gradient(0deg,rgba(0,0,0,0.5),rgba(0,0,0,0.15)), url('https://images.unsplash.com/photo-1581092194502-36b0d5b0b1a9?auto=format&fit=crop&w=1600&q=80') center center / cover no-repeat",
-            zIndex: 1,
-          }}
-        />
-        <motion.h1
-          ref={heroRef}
-          variants={heroHeadlineVariants}
-          initial="hidden"
-          animate={heroInView ? "visible" : "hidden"}
-          className="relative z-10 text-white text-5xl md:text-7xl font-extrabold tracking-tight text-center"
-        >
-          What We Do
-          <motion.p
-            variants={heroSubVariants}
+        {/* HERO SECTION */}
+        <section className="w-full pt-28 pb-20 px-20 max-md:px-5 text-center bg-[#00284e]">
+          <motion.div initial="hidden" whileInView="show" variants={fadeUp} className="max-w-5xl mx-auto">
+            <h1 className="text-4xl md:text-5xl font-semibold text-white leading-tight">
+              NobleAce Earthworks — Mining Exploration, Licensing & Geological Consulting
+            </h1>
+            <p className="mt-6 text-lg md:text-xl text-gray-200 leading-relaxed">
+              Partnering with governments, juniors, and investors to responsibly discover, evaluate, and develop mineral resources.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <a
+                href="/contact"
+                className="px-6 py-3 rounded-full bg-white text-[#00284e] font-medium shadow hover:opacity-95"
+              >
+                Start an Exploration Project
+              </a>
+              <a
+                href="/about#expertise"
+                className="px-6 py-3 rounded-full border border-white text-white font-medium hover:bg-white/10"
+              >
+                Why NobleAce Earthworks
+              </a>
+            </div>
+          </motion.div>
+          <motion.div
             initial="hidden"
-            animate={heroInView ? "visible" : "hidden"}
-            className="text-xl md:text-2xl font-normal mt-4"
+            whileInView="show"
+            variants={slideIn}
+            className="mt-12 rounded-xl overflow-hidden shadow-2xl max-w-4xl mx-auto"
           >
-            Exploring Nigeria’s mineral wealth with sustainable geoscience solutions.
-          </motion.p>
-        </motion.h1>
-      </section>
+            <Image
+              src={assets.pic25}
+              alt="Geological field crew"
+              width={1200}
+              height={700}
+              className="object-cover w-full h-full"
+              priority
+            />
+          </motion.div>
+        </section>
 
-      {/* Introduction */}
-      <section className="max-w-6xl mx-auto px-4 md:px-8 mb-24">
-        <motion.div
-          variants={introColVariants}
-          initial="hidden"
-          whileInView="visible"
-          custom={0}
-          viewport={{ once: true, amount: 0.2 }}
-          className="bg-white shadow p-8 text-[20px] md:text-[22px] text-gray-800 font-extralight leading-relaxed rounded-xl"
-        >
-          NobleAce Earthworks is a multidisciplinary geoscience and mining services firm based in Abuja. Combining practical field experience with rigorous technical analysis, we deliver exploration, environmental, and engineering solutions that unlock mineral value while prioritizing safety and sustainability. Our team of geologists, engineers, and environmental scientists bring deep local knowledge and international best practices to every project. We work closely with communities, regulators, and industry partners to ensure lasting economic and environmental benefits.
-        </motion.div>
-      </section>
+        {/* CORE SERVICES */}
+        <section className="w-full px-20 max-md:px-5 py-24 bg-white">
+          <div className="max-w-7xl mx-auto text-center">
+            <motion.h2 initial="hidden" whileInView="show" variants={fadeUp} className="text-3xl md:text-4xl font-semibold mb-12 text-[#0b2130]">
+              Our Core Services
+            </motion.h2>
+            <motion.div initial="hidden" whileInView="show" variants={stagger} className="grid md:grid-cols-3 gap-10">
+              {services.map((s, i) => (
+                <motion.article
+                  key={i}
+                  variants={fadeUp}
+                  className="bg-gray-50 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition cursor-pointer flex flex-col"
+                >
+                  <div className="relative h-52 w-full">
+                    <Image src={s.img} alt={s.title} fill className="object-cover" />
+                  </div>
+                  <div className="p-6 flex-1 flex flex-col">
+                    <h3 className="text-lg font-medium text-[#00284e] mb-3">{s.title}</h3>
+                    <p className="text-gray-700 mb-4 flex-1">{s.desc}</p>
+                    <ul className="text-gray-700 list-disc list-inside space-y-1">
+                      {s.points.map((point, idx) => (
+                        <li key={idx}>{point}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </motion.article>
+              ))}
+            </motion.div>
+          </div>
+        </section>
 
-      {/* Focus Areas */}
-      <section className="max-w-7xl mx-auto px-4 md:px-8 mb-24">
-        <div className="flex overflow-x-auto pb-4 -mx-2">
-          {focusAreas.map((area, i) => (
-            <FocusCard key={i} area={area} index={i} />
-          ))}
-        </div>
-      </section>
+        {/* WHY CHOOSE US */}
+        <section className="w-full px-20 max-md:px-5 py-24 bg-[#f7f9fb] text-center">
+          <div className="max-w-6xl mx-auto">
+            <motion.h2 initial="hidden" whileInView="show" variants={fadeUp} className="text-3xl md:text-4xl font-semibold mb-12 text-[#0b2130]">
+              Why Leading Explorers Choose NobleAce
+            </motion.h2>
+            <motion.div initial="hidden" whileInView="show" variants={stagger} className="grid md:grid-cols-3 gap-8">
+              <motion.div variants={fadeUp} className="bg-white p-8 rounded-xl shadow hover:shadow-lg transition">
+                <h3 className="text-xl font-medium text-[#003B5C] mb-2">Proven Technical Capability</h3>
+                <p className="text-gray-700">Senior geologists, mining engineers, and hydrogeologists with global best-practice workflows.</p>
+              </motion.div>
+              <motion.div variants={fadeUp} className="bg-white p-8 rounded-xl shadow hover:shadow-lg transition">
+                <h3 className="text-xl font-medium text-[#003B5C] mb-2">Licence-Ready Deliverables</h3>
+                <p className="text-gray-700">Reporting packages designed to meet regulatory and investor expectations.</p>
+              </motion.div>
+              <motion.div variants={fadeUp} className="bg-white p-8 rounded-xl shadow hover:shadow-lg transition">
+                <h3 className="text-xl font-medium text-[#003B5C] mb-2">Practical, Outcomes-Focused</h3>
+                <p className="text-gray-700">Faster permitting, clearer investment cases, and reduced time-to-drill.</p>
+              </motion.div>
+            </motion.div>
+          </div>
+        </section>
 
-      <FAQSection />
+        {/* PROCESS */}
+        <section className="w-full px-20 max-md:px-5 py-24 bg-white">
+          <div className="max-w-7xl mx-auto text-center">
+            <motion.h2 initial="hidden" whileInView="show" variants={fadeUp} className="text-3xl md:text-4xl font-semibold mb-12 text-[#0b2130]">
+              Our Process
+            </motion.h2>
+            <motion.ol initial="hidden" whileInView="show" variants={stagger} className="grid md:grid-cols-4 gap-8 list-decimal pl-6 text-left">
+              {[
+                { step: "Strategic Targeting", desc: "Synthesis of regional data, remote sensing, and historical records." },
+                { step: "Field Investigation", desc: "Rapid mapping, sampling, and geophysical surveys." },
+                { step: "Drilling & Testing", desc: "Design, supervision, and geochemical/lab workflows." },
+                { step: "Reporting & Permitting", desc: "Resource modeling and regulator-ready documentation." },
+              ].map((p, i) => (
+                <motion.li key={i} variants={fadeUp} className="bg-gray-50 p-6 rounded-xl shadow hover:shadow-lg transition">
+                  <h4 className="text-lg font-medium text-[#00284e] mb-2">Step {i + 1}: {p.step}</h4>
+                  <p className="text-gray-700">{p.desc}</p>
+                </motion.li>
+              ))}
+            </motion.ol>
+          </div>
+        </section>
+
+        {/* FINAL CTA */}
+        <section className="w-full px-6 py-24 bg-[#00284e] text-white text-center">
+          <div className="max-w-4xl mx-auto">
+            <motion.h2 initial="hidden" whileInView="show" variants={fadeUp} className="text-3xl md:text-4xl font-semibold leading-tight">
+              Ready to turn geological potential into permit-ready projects?
+            </motion.h2>
+            <p className="mt-6 text-gray-200">
+              Contact NobleAce Earthworks for exploration, licensing strategy, or technical review.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+              <a href="/contact" className="px-6 py-3 rounded bg-white text-[#00284e] font-medium shadow hover:opacity-95">
+                Book a Consultation
+              </a>
+              <a href="/resources" className="px-6 py-3 rounded border border-white text-white hover:bg-white/10">
+                Download Capability Statement
+              </a>
+            </div>
+          </div>
+        </section>
+
+      </main>
       <Footer1 />
-    </div>
+    </>
   );
 }

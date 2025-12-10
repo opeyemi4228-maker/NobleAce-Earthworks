@@ -1,443 +1,295 @@
-'use client';
+"use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
-import Footer1 from "@/components/Footer1";
-import { Montserrat } from "next/font/google";
+import Footersection from "@/components/Footer1";
+import { FiX, FiChevronRight } from "react-icons/fi";
 
-/* ---------- Team page - NobleAce Earthworks ---------- */
-/* Excellence and professionalism implemented with accessible, responsive markup.
-   Tailwind utility classes are used; adjust if your project uses different CSS. */
+// ---------------------------
+// NobleAce — Team & Leadership
+// World-class single-file React (Next.js) page
+// Built with Tailwind + Framer Motion
+// Features: Leader modals, hover highlights, culture cards,
+// timeline, recruitment section, accessibility, and polish.
+// ---------------------------
 
-const BRAND_GOLD = "#B8976A";
-const montserrat = Montserrat({ subsets: ["latin"], weight: ["300","400","500","600","700"] });
+const pageFade = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6 } } };
+const cardPop = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
 
-const TEAM_MEMBERS = [
+const LEADERS = [
   {
-    id: 1,
-    name: "Mr. Timbee Terungwa Jacob",
-    title: "Chief Executive Officer & Managing Director",
-    years: "18 yrs",
-    bio: "A visionary leader in geological engineering and mineral resource development, driving sustainable mining operations across Africa.",
-    img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
-    type: "hero",
+    id: "timbee",
+    name: " Mr. Timbee Terungwa Jacob",
+    role: "Chief Executive Officer",
+    photo: "https://images.unsplash.com/photo-1603415526960-f7e0328f2b5b?auto=format&fit=crop&w=800&q=80",
+    bio: "Adewale leads with a rare combination of technical depth and strategic vision. Over 25 years, he has delivered large-scale mining projects and championed sustainable practices across West Africa.",
+    achievements: [
+      "Led 40+ large-scale projects",
+      "AI-driven geological mapping pioneer",
+      "Awarded Industry Leadership, 2022",
+    ],
+    focus: ["Strategy", "Sustainability", "Partnerships"],
   },
   {
-    id: 1,
+    id: "musa",
     name: "Alhaji Kamaludeen Musa",
-    title: "General Manager",
-    years: "18 yrs",
-    bio: "A visionary leader in geological engineering and mineral resource development, driving sustainable mining operations across Africa.",
-    img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
-    type: "hero",
+    role: "Head of Geological Sciences",
+    photo: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=800&q=80",
+    bio: "Dr. Sandra is an expert in exploration geology, core logging and resource modelling. She leads NobleAce's scientific programs and mentors young geoscientists.",
+    achievements: ["12+ peer-reviewed papers", "Multiple commercial discoveries", "Head of Exploration 2016-present"],
+    focus: ["Exploration", "Modelling", "Research"],
   },
   {
-    id: 2,
-    name: "Dr. Amara Okonkwo",
-    title: "Head, Geological & Exploration Services",
-    years: "15 yrs",
-    bio: "Leads exploration teams in geophysical surveys, drilling programs, and mineral assessment across diverse terrains.",
-    img: "https://images.unsplash.com/photo-1545996124-1b2f6b6d6a9a?auto=format&fit=crop&w=800&q=80",
-    type: "small",
-    bg: "bg-[#D4E8E8]",
-  },
-  {
-    id: 3,
-    name: "Dr. Cynthia O. Akande",
-    title: "Director, Sustainability & Environmental Impact",
-    years: "12 yrs",
-    bio: "Passionate about responsible mining practices and environmental conservation.",
-    type: "quote",
-    quote:
-      "At NobleAce Earthworks, we don’t just extract resources — we uncover value responsibly, ensuring every project leaves a legacy of sustainability.",
-    bg: "bg-[#E5D4F0]",
-  },
-  {
-    id: 4,
-    name: "Engr. Oluwaseun Balogun",
-    title: "Chief Mining Engineer",
-    years: "20+ yrs",
-    bio: "Oversees drilling, blasting, and field operations with precision and adherence to global safety standards.",
-    img: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=800&q=80",
-    type: "small",
-    bg: "bg-[#D4F0E0]",
-  },
-  {
-    id: 5,
-    name: "Engr. Sarah Adeyemi",
-    title: "Project Coordinator",
-    years: "9 yrs",
-    bio: "Ensures efficient coordination of exploration data, logistics, and client reporting.",
-    type: "stat",
-    stat: "200+",
-    statLabel: "Exploration Projects Completed",
-    bg: "bg-[#2B1810]",
-  },
-  {
-    id: 6,
-    name: "Engr. Kofi Agyeman",
-    title: "Health, Safety & Compliance Officer",
-    years: "13 yrs",
-    bio: "Implements best-in-class HSE standards and oversees operational safety protocols on field projects.",
-    img: "https://images.unsplash.com/photo-1545996124-1b2f6b6d6a9a?auto=format&fit=crop&w=800&q=60",
-    type: "small",
-    bg: "bg-[#FFD4C4]",
-  },
-  {
-    id: 7,
-    name: "Chika Nwafor",
-    title: "Geospatial Data & GIS Lead",
-    years: "10 yrs",
-    bio: "Specializes in remote sensing, spatial mapping, and digital terrain analysis for mineral exploration.",
-    img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=60",
-    type: "small",
-    bg: "bg-[#E5D4F0]",
-  },
-  {
-    id: 8,
-    name: "Engr. David Okeke",
-    title: "Director of Operations",
-    years: "14 yrs",
-    bio: "Oversees field logistics, drilling efficiency, and stakeholder coordination for all active mining sites.",
-    img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=900&q=60",
-    type: "large",
+    id: "michael",
+    name: "Engr. Michael Yusuf",
+    role: "Director of Operations",
+    photo: "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?auto=format&fit=crop&w=800&q=80",
+    bio: "Michael runs field operations, safety systems and logistics — ensuring projects run on time and safely at scale.",
+    achievements: ["Zero-accident safety model (5yrs)", "Built operations teams of 200+", "Innovator: soil stabilisation methods"],
+    focus: ["Operations", "Safety", "Execution"],
   },
 ];
 
-/* ---------- Simple in-view hook (IntersectionObserver) ---------- */
-function useInView(ref, options = {}) {
-  const [inView, setInView] = useState(false);
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return undefined;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setInView(true);
-            if (options.once) observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: options.threshold ?? 0.15 }
-    );
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [ref, options.once, options.threshold]);
-  return inView;
-}
+const CULTURE = [
+  { title: "Integrity", desc: "We operate transparently, ethically and responsibly." },
+  { title: "Innovation", desc: "We apply the latest science and technology to solve hard problems." },
+  { title: "Sustainability", desc: "We deliver projects that restore environments and uplift communities." },
+];
 
-/* ---------- Hero ---------- */
-function Hero() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, threshold: 0.18 });
+const TIMELINE = [
+  { year: "2002", title: "Founded as a geological survey team" },
+  { year: "2008", title: "Expanded into full earthworks & geotechnical services" },
+  { year: "2016", title: "Started large-scale open-pit programs across West Africa" },
+  { year: "2023", title: "Launched AI-driven exploration initiative" },
+];
+
+const JOBS = [
+  { id: "geo-1", title: "Senior Geologist", location: "Lagos, NG", desc: "Lead exploration campaigns and resource modelling." },
+  { id: "ops-1", title: "Site Operations Manager", location: "Abuja, NG", desc: "Oversee field operations and safety programs." },
+  { id: "eng-1", title: "Geotechnical Engineer", location: "Remote", desc: "Design and validate earthworks and slope stability." },
+];
+
+export default function TeamLeadershipPage() {
+  const [active, setActive] = useState(null); // leader id
+  const [filter, setFilter] = useState("all");
+  const [showApply, setShowApply] = useState(false);
+  const applyRef = useRef();
+
+  useEffect(() => {
+    if (showApply && applyRef.current) applyRef.current.focus();
+  }, [showApply]);
+
+  const openLeader = (id) => setActive(id);
+  const closeLeader = () => setActive(null);
+
+  const leader = LEADERS.find((l) => l.id === active);
 
   return (
-    <section
-      ref={ref}
-      className="relative h-[60vh] flex items-center"
-      aria-label="Meet our excellence hero"
-      style={{
-        backgroundImage:
-          "linear-gradient(180deg, rgba(43,24,16,0.7), rgba(43,24,16,0.3)), url('https://images.unsplash.com/photo-1581091870622-3b5de1b1a8e8?auto=format&fit=crop&w=1800&q=80')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="absolute inset-0" aria-hidden="true" />
-      <div className="max-w-6xl px-5 md:px-12 z-10">
-        <nav
-          className="text-white/90 text-[13px] font-medium mb-4"
-          style={{ marginTop: 30 }}
-          aria-label="breadcrumb"
-        >
-          <ol className="flex gap-2 mt-20 items-center">
-            <li><a href="/" className="hover:underline focus:outline-none">Home</a></li>
-            <li className="opacity-70">/</li>
-            <li className="font-medium">Our Team</li>
-          </ol>
-        </nav>
+    <motion.div initial="hidden" animate="visible" variants={pageFade} className="min-h-screen bg-white text-slate-900">
+      <Navbar />
 
-        <div
-          className={`max-w-[900px] text-white leading-tight transition-all duration-500 ease-out ${inView ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"}`}
-          style={{ letterSpacing: "1px" }}
-        >
-          <h1 className="text-[30px] md:text-[30px] lg:text-[45px] font-extrabold tracking-wide leading-tight">
-            <span className="block">MEET THE <span style={{ color: BRAND_GOLD }}>MINDS</span></span>
-            <span className="block">BEHIND NOBLEACE EARTHWORKS</span>
-          </h1>
-
-          <p className="mt-6 text-[16px] md:text-[18px] max-w-[650px] text-white/90 leading-[1.4]">
-            A multidisciplinary team of geologists, engineers, and innovators — committed to redefining mining through excellence, innovation, and sustainability.
-          </p>
-
-          
-    
+      {/* HERO */}
+      
+         <section className="relative w-full h-[60vh] md:h-[70vh] flex items-center justify-center overflow-hidden mb-20 bg-[#00284e]">
+                <motion.div
+                  className="absolute inset-0 w-full h-full"
+                  initial={{ scale: 1.1, filter: "blur(3px)" }}
+                  animate={{ scale: 1, filter: "blur(0px)", transition: { duration: 1.5, ease: "easeOut" } }}
+                  style={{
+                    background: "linear-gradient(0deg, rgba(0,0,0,0.4), rgba(0,0,0,0.15)), url('https://images.unsplash.com/photo-1609851197358-5a875eb4d5cb?auto=format&fit=crop&w=1200&q=80') center center / cover no-repeat",
+                    zIndex: 1,
+                    willChange: "transform,filter",
+                  }}
+                />
+        <div className="relative z-10 flex flex-col items-start justify-center h-full px-6 md:px-16 lg:px-24">
+          <motion.h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-tight max-w-3xl" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }}>
+           MEET THE TEAM DRIVING NOBLEACE
+          </motion.h1>
+          <motion.p className="text-white/90 mt-4 max-w-2xl text-base md:text-lg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+            Our leadership blends deep technical expertise, operational excellence and a commitment to sustainable development across every project.
+          </motion.p>
         </div>
-      </div>
-    </section>
-  );
-}
+      </section>
+      
 
-/* ---------- TeamCard ---------- */
-function TeamCard({ member }) {
-  const ref = useRef(null);
-  const visible = useInView(ref, { once: true, threshold: 0.15 });
-  const base = "transition-transform duration-500 ease-out";
-
-  if (member.type === "hero" || member.type === "large") {
-    return (
-      <article
-        ref={ref}
-        className={`${base} transform ${visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"} rounded-xl overflow-hidden relative col-span-2 row-span-2 shadow-lg`}
-        style={{ minHeight: 320 }}
-        tabIndex={0}
-      >
-        <img src={member.img} alt={member.name} className="w-full h-full object-cover" loading="lazy" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent p-6 flex flex-col justify-end">
+      {/* LEADERS GRID */}
+      <main className="max-w-7xl mx-auto px-6 md:px-12 py-16">
+        <section className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
           <div>
-            <div className="text-2xl font-bold text-white">{member.name}</div>
-            <div className="text-sm text-[#B8976A] mt-1">{member.title}</div>
-            <p className="text-sm text-white/90 mt-3 max-w-[75%]">{member.bio}</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-800">EXECUTIVE LEADERSHIP</h2>
+            <p className="text-gray-600 mt-1">Click any profile to view a detailed bio and achievements.</p>
           </div>
-        </div>
-      </article>
-    );
-  }
+          <div className="flex items-center gap-3">
+            <label className="text-sm text-gray-600">Filter:</label>
+            <select value={filter} onChange={(e) => setFilter(e.target.value)} className="rounded-md border px-3 py-2 text-sm">
+              <option value="all">All</option>
+              <option value="strategy">Strategy</option>
+              <option value="exploration">Exploration</option>
+              <option value="operations">Operations</option>
+            </select>
+          </div>
+        </section>
 
-  if (member.type === "quote") {
-    return (
-      <article
-        ref={ref}
-        className={`${base} transform ${visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"} p-8 rounded-xl ${member.bg ?? "bg-white"} shadow`}
-        style={{ minHeight: 200 }}
-        tabIndex={0}
-      >
-        <div className="text-[56px] text-white/10 mb-4 leading-none">“</div>
-        <p className="text-base text-[#2B1810] mb-4">{member.quote}</p>
-        <div className="mt-4 text-sm font-semibold text-[#2B1810]">{member.name}</div>
-        <div className="text-xs text-gray-600">{member.title}</div>
-      </article>
-    );
-  }
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {LEADERS.filter((l) => filter === "all" || l.focus.join(" ").toLowerCase().includes(filter)).map((l) => (
+            <motion.article key={l.id} variants={cardPop} initial="hidden" whileInView="visible" viewport={{ once: true }} className="rounded-2xl shadow-lg hover:shadow-2xl bg-white overflow-hidden group cursor-pointer" onClick={() => openLeader(l.id)} aria-labelledby={`leader-${l.id}`} role="button" tabIndex={0} onKeyDown={(e) => (e.key === 'Enter' ? openLeader(l.id) : null)}>
+              <div className="relative h-64 w-full overflow-hidden">
+                <Image src={l.photo} alt={l.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+              </div>
 
-  if (member.type === "stat") {
-    return (
-      <article
-        ref={ref}
-        className={`${base} transform ${visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"} p-6 rounded-xl ${member.bg ?? "bg-white"} shadow text-white`}
-        style={{ minHeight: 160 }}
-        tabIndex={0}
-      >
-        <div className="text-4xl font-bold" style={{ color: BRAND_GOLD }}>{member.stat}</div>
-        <div className="text-sm mt-1 text-white/95">{member.statLabel}</div>
-        <div className="mt-6 text-sm font-medium text-white">{member.name}</div>
-        <div className="text-xs text-white/80">{member.title}</div>
-      </article>
-    );
-  }
+              <div className="p-6">
+                <h3 id={`leader-${l.id}`} className="text-lg md:text-xl font-semibold text-slate-800">{l.name}</h3>
+                <p className="text-sky-700 font-medium mt-1">{l.role}</p>
 
-  return (
-    <article
-      ref={ref}
-      className={`${base} transform ${visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"} p-6 rounded-xl ${member.bg ?? "bg-white"} shadow flex items-start gap-4`}
-      style={{ minHeight: 160 }}
-      tabIndex={0}
-    >
-      {member.img && (
-        <img src={member.img} alt={`${member.name} portrait`} className="w-16 h-16 rounded-full object-cover flex-shrink-0" loading="lazy" />
-      )}
-      <div>
-        <div className="text-lg font-semibold text-[#2B1810]">{member.name}</div>
-        <div className="text-sm text-gray-700">{member.title} · {member.years}</div>
-        <div className="text-sm italic text-gray-600 mt-2">{member.bio}</div>
-      </div>
-    </article>
-  );
-}
-
-/* ---------- TeamGrid ---------- */
-function TeamGrid() {
-  return (
-    <section id="team-grid" className="bg-white py-20">
-      <div className="max-w-6xl mx-auto px-5 md:px-8">
-        <header className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#2B1810]">EXCELLENCE IN EVERY FLIGHT</h2>
-          <p className="mt-4 text-[17px] text-[#5D5D5D] mx-auto max-w-[700px] leading-relaxed">
-            Meet the professionals who ensure your journey exceeds expectations, every single time.
-          </p>
-        </header>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 auto-rows-fr">
-          <TeamCard member={TEAM_MEMBERS[0]} />
-          <TeamCard member={TEAM_MEMBERS[2]} />
-          <TeamCard member={TEAM_MEMBERS[1]} />
-          <TeamCard member={TEAM_MEMBERS[3]} />
-          <TeamCard member={TEAM_MEMBERS[7]} />
-          <TeamCard member={TEAM_MEMBERS[4]} />
-          <TeamCard member={TEAM_MEMBERS[5]} />
-          <TeamCard member={TEAM_MEMBERS[6]} />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- Testimonials (horizontal scroll) ---------- */
-function Testimonials() {
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    // No forced animation on users with reduced motion - simple subtle auto scroll if desired
-    const el = containerRef.current;
-    if (!el) return;
-    let rafId;
-    let lastTs = performance.now();
-    const speed = 0.02;
-    const step = (ts) => {
-      const dt = ts - lastTs;
-      lastTs = ts;
-      el.scrollLeft = (el.scrollLeft + dt * speed) % (el.scrollWidth || 1);
-      rafId = requestAnimationFrame(step);
-    };
-    rafId = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(rafId);
-  }, []);
-
-  const cards = [
-    {
-      quote:
-        "The NobleAce team made field mobilisation seamless and safe. Communication and delivery were outstanding.",
-      name: "Chidi Okafor",
-      title: "CEO, TechCorp Nigeria",
-      avatar: "https://images.unsplash.com/photo-1545996124-1b2f6b6d6a9a?auto=format&fit=crop&w=200&q=80",
-    },
-    {
-      quote:
-        "Their environmental stewardship and technical expertise are industry-leading.",
-      name: "Aisha Bello",
-      title: "Founder, A&B Events",
-      avatar: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=200&q=80",
-    },
-    {
-      quote:
-        "Operational excellence across multi-site projects — reliable and professional.",
-      name: "Mark Stevens",
-      title: "COO, GlobalEnergy",
-      avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80",
-    },
-  ];
-
-  return (
-    <section className="py-16 bg-[#F5F5F5]">
-      <div className="max-w-6xl mx-auto px-5 md:px-8">
-        <h3 className="text-3xl text-center font-bold text-[#2B1810] mb-8">WHAT OUR CLIENTS SAY</h3>
-
-        <div
-          ref={containerRef}
-          className="flex gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-4"
-          aria-label="client testimonials"
-        >
-          {cards.map((c, i) => (
-            <article key={i} className="min-w-[320px] max-w-[380px] bg-white rounded-xl p-6 shadow-md snap-center">
-              <div className="text-[#B8976A] mb-4">★★★★★</div>
-              <p className="text-[#3D3D3D] leading-relaxed mb-6" style={{ lineHeight: 1.9 }}>
-                {c.quote}
-              </p>
-              <div className="flex items-center gap-3">
-                <img src={c.avatar} alt={`${c.name} avatar`} className="w-12 h-12 rounded-full object-cover" loading="lazy" />
-                <div>
-                  <div className="font-semibold">{c.name}</div>
-                  <div className="text-xs text-gray-500">{c.title}</div>
+                {/* Hover-activated role highlights (7) */}
+                <div className="mt-4">
+                  <div className="text-sm text-gray-600 line-clamp-3">{l.bio}</div>
+                  <div className="mt-3 opacity-0 group-hover:opacity-100 transition-all text-sm text-gray-700">
+                    <strong>Focus:</strong> {l.focus.join(", ")}
+                  </div>
                 </div>
               </div>
-            </article>
+            </motion.article>
           ))}
-        </div>
-      </div>
-    </section>
-  );
-}
+        </section>
 
-/* ---------- WhyDifferent ---------- */
-function WhyDifferent() {
-  const features = [
-    {
-      icon: "🎓",
-      title: "Certified Professionals",
-      body: "Every team member holds industry certifications and undergoes continuous training in safety and operational excellence.",
-    },
-    {
-      icon: "⚡",
-      title: "24/7 Availability",
-      body: "Our teams operate around the clock to support time-critical projects across multiple time zones.",
-    },
-    {
-      icon: "🤝",
-      title: "Personal Consultants",
-      body: "Dedicated consultants manage stakeholder relations and ensure project delivery with precision.",
-    },
-  ];
+        {/* Modal (1) */}
+        <AnimatePresence>
+          {active && leader && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+              <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 20 }} transition={{ duration: 0.25 }} className="bg-white rounded-2xl max-w-3xl w-full shadow-2xl overflow-hidden">
+                <div className="relative">
+                  <button onClick={closeLeader} aria-label="Close profile" className="absolute top-4 right-4 z-10 rounded-full bg-white p-2 shadow hover:bg-gray-50">
+                    <FiX size={20} />
+                  </button>
+                  <div className="relative h-56 md:h-72 w-full">
+                    <Image src={leader.photo} alt={leader.name} fill className="object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40" />
+                  </div>
+                </div>
 
-  return (
-    <section className="py-16 bg-white">
-      <div className="max-w-6xl mx-auto px-5 md:px-8 text-center">
-        <h3 className="text-3xl font-bold text-[#2B1810] mb-10">EXCELLENCE THROUGH EXPERTISE</h3>
+                <div className="p-6 md:p-8">
+                  <h3 className="text-2xl font-bold text-slate-900">{leader.name}</h3>
+                  <p className="text-sky-700 font-medium mt-1 mb-4">{leader.role}</p>
+                  <p className="text-gray-700 leading-relaxed mb-4">{leader.bio}</p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {features.map((f, i) => (
-            <div key={i} className="p-8 rounded-lg border hover:shadow-lg transition transform hover:-translate-y-1">
-              <div className="text-5xl mb-4" aria-hidden>{f.icon}</div>
-              <h4 className="text-xl font-semibold mb-3">{f.title}</h4>
-              <p className="text-gray-600 leading-relaxed">{f.body}</p>
+                  <h4 className="font-semibold mb-2">Key Achievements</h4>
+                  <ul className="list-disc pl-6 text-gray-700 mb-6">
+                    {leader.achievements.map((a, i) => (
+                      <li key={i}>{a}</li>
+                    ))}
+                  </ul>
+
+                  <div className="flex flex-wrap gap-3">
+                    {leader.focus.map((f) => (
+                      <span key={f} className="px-3 py-1 rounded-full bg-sky-50 text-sky-800 text-sm">{f}</span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* CULTURE & VALUES (4) */}
+        <section className="mt-16">
+          <motion.h3 variants={cardPop} initial="hidden" whileInView="visible" className="text-2xl md:text-3xl font-semibold text-slate-800 mb-6">Our Culture & Core Values</motion.h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {CULTURE.map((c) => (
+              <motion.div key={c.title} variants={cardPop} className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition">
+                <h4 className="text-xl font-semibold text-sky-800 mb-2">{c.title}</h4>
+                <p className="text-gray-600">{c.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* TIMELINE (6) */}
+        <section className="mt-16">
+          <motion.h3 variants={cardPop} initial="hidden" whileInView="visible" className="text-2xl md:text-3xl font-semibold text-slate-800 mb-8">Our Journey</motion.h3>
+
+          <div className="relative">
+            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-sky-200" />
+            <div className="space-y-10 pl-10">
+              {TIMELINE.map((item, idx) => (
+                <motion.div key={item.year} variants={cardPop} className="relative">
+                  <div className="absolute -left-7 top-1 flex items-center justify-center h-9 w-9 rounded-full bg-sky-700 text-white text-sm">{item.year}</div>
+                  <div className="bg-white p-4 rounded-xl shadow-sm">
+                    <h4 className="font-semibold text-slate-800">{item.title}</h4>
+                  </div>
+                </motion.div>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
+          </div>
+        </section>
 
-/* ---------- JoinCTA ---------- */
-function JoinCTA() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, threshold: 0.25 });
+        {/* RECRUITMENT / CAREERS (5) */}
+        <section className="mt-16 bg-sky-50 p-8 rounded-2xl">
+          <div className="flex items-start justify-between gap-6 flex-col md:flex-row">
+            <div>
+              <h3 className="text-2xl md:text-3xl font-semibold text-slate-800">Join Our Team</h3>
+              <p className="text-gray-700 mt-2 max-w-xl">We hire for excellence. Explore current openings and apply to help build a more sustainable mining future.</p>
+            </div>
+            <div>
+              <button onClick={() => setShowApply(true)} className="bg-sky-800 text-white px-5 py-3 rounded-full font-semibold hover:bg-sky-700 transition">See Open Roles</button>
+            </div>
+          </div>
 
-  return (
-    <section ref={ref} className="py-16" style={{ background: "#2B1810" }}>
-      <div className="max-w-5xl mx-auto px-5 text-center text-white">
-        <h3 className="text-3xl font-bold mb-4">PASSIONATE ABOUT EXCELLENCE?</h3>
-        <p className="max-w-[700px] mx-auto text-white/90 mb-6">
-          We're always looking for exceptional talent to join NobleAce Earthworks. Explore opportunities to help shape sustainable mining in Africa.
-        </p>
-        <a
-          href="/careers"
-          className="inline-block px-8 md:px-10 py-3 md:py-4 border-2 border-white rounded-full text-white font-semibold transition transform"
-          style={{
-            background: inView ? "rgba(255,255,255,0.04)" : "transparent",
-            boxShadow: inView ? "0 10px 30px rgba(0,0,0,0.25)" : "none",
-          }}
-        >
-          VIEW OPEN POSITIONS
-        </a>
-      </div>
-    </section>
-  );
-}
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+            {JOBS.slice(0,3).map((job) => (
+              <div key={job.id} className="bg-white p-4 rounded-xl shadow-sm">
+                <h4 className="font-semibold text-slate-800">{job.title}</h4>
+                <p className="text-sm text-gray-600 mt-1">{job.location}</p>
+                <p className="text-gray-700 mt-3 text-sm">{job.desc}</p>
+                <div className="mt-4">
+                  <button onClick={() => setShowApply(true)} className="text-sky-800 font-medium inline-flex items-center gap-2">Apply <FiChevronRight /></button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
 
-/* ---------- Page Export ---------- */
-export default function TeamPage() {
-  return (
-    <div className="antialiased text-[#2B1810] bg-white font-sans">
-      <Navbar />
-      <main>
-        <Hero />
-        <TeamGrid />
-        <Testimonials />
-        <WhyDifferent />
-        <JoinCTA />
       </main>
-      <Footer1 />
-    </div>
+
+      {/* APPLY MODAL */}
+      <AnimatePresence>
+        {showApply && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-lg">
+              <div className="flex items-start justify-between">
+                <h3 className="text-xl font-semibold">Apply for a Role</h3>
+                <button onClick={() => setShowApply(false)} className="text-gray-500 hover:text-black"><FiX size={22} /></button>
+              </div>
+
+              <form className="mt-4 grid grid-cols-1 gap-4">
+                <label className="text-sm text-gray-700">Full name</label>
+                <input ref={applyRef} className="border rounded-md px-3 py-2" placeholder="Your full name" />
+
+                <label className="text-sm text-gray-700">Email</label>
+                <input className="border rounded-md px-3 py-2" placeholder="you@email.com" type="email" />
+
+                <label className="text-sm text-gray-700">Role</label>
+                <select className="border rounded-md px-3 py-2">
+                  {JOBS.map((j) => <option key={j.id} value={j.id}>{j.title}</option>)}
+                </select>
+
+                <label className="text-sm text-gray-700">Cover letter</label>
+                <textarea className="border rounded-md px-3 py-2 h-28" placeholder="A short message about why you'd be a great fit" />
+
+                <div className="flex items-center justify-end gap-3 mt-2">
+                  <button type="button" onClick={() => setShowApply(false)} className="px-4 py-2 rounded-md">Cancel</button>
+                  <button type="submit" className="bg-sky-800 text-white px-4 py-2 rounded-md">Send Application</button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <Footersection />
+    </motion.div>
   );
 }

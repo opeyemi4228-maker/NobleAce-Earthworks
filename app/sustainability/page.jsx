@@ -21,11 +21,11 @@ const cardAnim = { hidden: { opacity: 0, y: 50, scale: 0.95 }, visible: i => ({ 
 
 // --- Focus Areas Data ---
 const focusAreas = [
-  { title: "Environmental Stewardship", desc: "Preserving ecosystems by integrating environmental protection into every project stage.", img: "https://images.unsplash.com/photo-1581091012184-5c4a6eec0c84?auto=format&fit=crop&w=800&q=80", cta: "Learn more →" },
-  { title: "Energy Efficiency & Climate Action", desc: "Minimizing greenhouse gas emissions with energy-efficient and renewable alternatives.", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80", cta: "Learn more →" },
-  { title: "Health, Safety & Workforce Welfare", desc: "Prioritizing safety, health, and training for all our employees.", img: "https://images.unsplash.com/photo-1581092160607-9d7a9a5e9d57?auto=format&fit=crop&w=800&q=80", cta: "Learn more →" },
-  { title: "Community Engagement", desc: "Building partnerships with local communities through education and empowerment.", img: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80", cta: "Learn more →" },
-  { title: "Governance & Ethical Operations", desc: "Ensuring transparency, accountability, and ethical practices across all operations.", img: "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=800&q=80", cta: "Learn more →" },
+  { title: "Environmental Stewardship", desc: "Preserving ecosystems by integrating environmental protection into every project stage. From habitat conservation to responsible waste management, we ensure the land we explore remains sustainable for future generations.", img: "https://images.unsplash.com/photo-1581091012184-5c4a6eec0c84?auto=format&fit=crop&w=800&q=80", cta: "Learn more →" },
+  { title: "Energy Efficiency & Climate Action", desc: "Minimizing greenhouse gas emissions through energy-efficient practices, renewable energy adoption, and climate-conscious operations. Our initiatives reduce the carbon footprint across all sites.", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80", cta: "Learn more →" },
+  { title: "Health, Safety & Workforce Welfare", desc: "Ensuring the highest standards of safety, health, and training for every employee. We invest in protective equipment, emergency preparedness, and wellness programs to guarantee a secure and motivated workforce.", img: "https://images.unsplash.com/photo-1581092160607-9d7a9a5e9d57?auto=format&fit=crop&w=800&q=80", cta: "Learn more →" },
+  { title: "Community Engagement & Development", desc: "Building partnerships with local communities through education, skills training, and empowerment programs. We believe in mutual growth, supporting social infrastructure and creating long-term benefits.", img: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80", cta: "Learn more →" },
+  { title: "Governance & Ethical Operations", desc: "Ensuring transparency, accountability, and ethical practices across all operations. Compliance, anti-corruption policies, and robust reporting frameworks uphold our corporate integrity.", img: "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=800&q=80", cta: "Learn more →" },
 ];
 
 // --- Helper Components ---
@@ -74,52 +74,79 @@ export default function SustainabilityPage() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative w-full h-[440px] md:h-[560px] flex items-center justify-center overflow-hidden mb-20">
+      <section className="relative w-full h-[440px] md:h-[560px] flex items-center justify-center overflow-hidden mb-20 bg-[#00284e]">
         <motion.div
           className="absolute inset-0 w-full h-full"
           initial={{ scale: 1.1, filter: "blur(3px)" }}
           animate={{ scale: 1, filter: "blur(0px)", transition: { duration: 1.5, ease: "easeOut" } }}
           style={{
-            background: "linear-gradient(0deg,rgba(0,0,0,0.4),rgba(0,0,0,0.15)), url('https://images.unsplash.com/photo-1609851197358-5a875eb4d5cb?auto=format&fit=crop&w=1200&q=80') center center / cover no-repeat",
+            background: "linear-gradient(0deg, rgba(0,0,0,0.4), rgba(0,0,0,0.15)), url('https://images.unsplash.com/photo-1609851197358-5a875eb4d5cb?auto=format&fit=crop&w=1200&q=80') center center / cover no-repeat",
             zIndex: 1,
             willChange: "transform,filter",
           }}
         />
-        <motion.h1
-          ref={heroRef}
-          variants={fadeUp}
-          initial="hidden"
-          animate={heroInView ? "visible" : "hidden"}
-          className="relative z-10 text-white text-5xl md:text-6xl font-bold tracking-tight text-center"
-          style={{ textShadow: "0 4px 32px rgba(0,0,0,0.28)" }}
-        >
-          Our Commitment to Sustainable Earthworks
-        </motion.h1>
+        <motion.div className="relative z-10 text-center px-6 md:px-0">
+          <motion.h1
+            ref={heroRef}
+            variants={fadeUp}
+            initial="hidden"
+            animate={heroInView ? "visible" : "hidden"}
+            className="text-white text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6"
+            style={{ textShadow: "0 4px 32px rgba(0,0,0,0.28)" }}
+          >
+            Our Commitment to Sustainable Earthworks
+          </motion.h1>
+          <motion.p className="text-gray-200 text-lg md:text-xl max-w-3xl mx-auto">
+            Leading the industry with responsible exploration, ethical operations, and measurable impact. NobleAce Earthworks integrates sustainability into every stage of its projects to protect the environment, communities, and future resources.
+          </motion.p>
+        </motion.div>
       </section>
 
       {/* Introduction Section */}
       <section className="max-w-6xl mx-auto px-4 md:px-8 mb-24">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            "At NobleAce Earthworks, sustainability drives every exploration, engineering, and environmental decision we make. We believe responsible mining ensures both profitability and planetary well-being.",
-            "Our approach balances resource development with ecosystem preservation. Through efficient water use, waste reduction, and energy conservation, we minimize our environmental footprint while maximizing operational impact.",
-            "We actively contribute to the fight against climate change by implementing green technologies, promoting reclamation practices, and striving toward carbon neutrality in all our field operations.",
+            "At NobleAce Earthworks, sustainability drives every exploration, engineering, and environmental decision. Our philosophy ensures that resource development does not come at the cost of ecological integrity.",
+            "We implement cutting-edge solutions to reduce water usage, minimize waste, and optimize energy consumption. Our ESG framework ensures measurable outcomes and responsible resource management.",
+            "Through community partnership programs, reclamation initiatives, and renewable technology integration, we actively fight climate change and promote long-term ecosystem health."
           ].map((text, i) => (
-            <motion.div key={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} className="bg-white rounded-xl shadow p-8 text-base text-gray-800 font-light">
+            <motion.div key={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} className="bg-white rounded-xl shadow p-8 text-gray-800 font-light">
               {text}
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* Focus Area Cards */}
       <section className="max-w-6xl mx-auto px-4 md:px-8 mb-24">
+        <motion.h2 variants={fadeUp} initial="hidden" whileInView="visible" className="text-3xl md:text-4xl font-semibold text-[#00284e] text-center mb-12">
+          Key Focus Areas of Our Sustainable Operations
+        </motion.h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {focusAreas.slice(0, 3).map((area, i) => <FocusCard key={area.title} area={area} index={i} />)}
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-8">
           {focusAreas.slice(3).map((area, i) => <FocusCard key={area.title} area={area} index={i + 3} />)}
         </div>
+      </section>
+
+      {/* Impact & Achievements */}
+      <section className="max-w-6xl mx-auto px-4 md:px-8 mb-24">
+        <motion.h2 variants={fadeUp} initial="hidden" whileInView="visible" className="text-3xl md:text-4xl font-semibold text-[#00284e] text-center mb-12">
+          Measurable Impact & Achievements
+        </motion.h2>
+        <motion.div className="grid md:grid-cols-3 gap-8 text-center">
+          {[
+            { value: "500+", label: "Hectares Reclaimed" },
+            { value: "1M+", label: "Tons of Emissions Reduced" },
+            { value: "50+", label: "Community Programs Supported" },
+          ].map((item, i) => (
+            <motion.div key={i} variants={fadeUp} className="bg-white rounded-xl shadow p-8 hover:shadow-lg transition">
+              <div className="text-4xl md:text-5xl font-semibold text-[#00284e] mb-2">{item.value}</div>
+              <div className="text-gray-700 text-lg">{item.label}</div>
+            </motion.div>
+          ))}
+        </motion.div>
       </section>
 
       <Footer1 />
