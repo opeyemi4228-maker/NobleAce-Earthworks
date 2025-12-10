@@ -9,7 +9,6 @@ const pageFade = {
 };
 
 export default function PrivacyPolicyPage() {
-  return (export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
       <Navbar />
